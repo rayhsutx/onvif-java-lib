@@ -13,6 +13,8 @@ import org.onvif.ver10.device.wsdl.GetDeviceInformation;
 import org.onvif.ver10.device.wsdl.GetDeviceInformationResponse;
 import org.onvif.ver10.device.wsdl.GetHostname;
 import org.onvif.ver10.device.wsdl.GetHostnameResponse;
+import org.onvif.ver10.device.wsdl.GetNetworkInterfaces;
+import org.onvif.ver10.device.wsdl.GetNetworkInterfacesResponse;
 import org.onvif.ver10.device.wsdl.GetScopes;
 import org.onvif.ver10.device.wsdl.GetScopesResponse;
 import org.onvif.ver10.device.wsdl.GetServices;
@@ -34,6 +36,7 @@ import org.onvif.ver10.media.wsdl.GetProfiles;
 import org.onvif.ver10.media.wsdl.GetProfilesResponse;
 import org.onvif.ver10.schema.Capabilities;
 import org.onvif.ver10.schema.Date;
+import org.onvif.ver10.schema.NetworkInterface;
 import org.onvif.ver10.schema.Profile;
 import org.onvif.ver10.schema.Scope;
 import org.onvif.ver10.schema.Time;
@@ -250,6 +253,21 @@ public class InitialDevices {
 		}
 
 		return response.getScopes();
+	}
+	
+	public List<NetworkInterface> getMacAddress()
+	{
+		GetNetworkInterfaces request = new GetNetworkInterfaces();
+		GetNetworkInterfacesResponse response = new GetNetworkInterfacesResponse();
+		
+		try {
+			response = (GetNetworkInterfacesResponse) soap.createSOAPDeviceRequest(request, response, true);
+		} catch (SOAPException | ConnectException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return response.getNetworkInterfaces();
 	}
 
 	public String reboot() {
