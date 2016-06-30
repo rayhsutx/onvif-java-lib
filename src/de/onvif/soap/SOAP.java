@@ -1,7 +1,9 @@
 package de.onvif.soap;
 
 import java.io.IOException;
+import java.net.Authenticator;
 import java.net.ConnectException;
+import java.net.PasswordAuthentication;
 import java.net.SocketException;
 
 import javax.xml.bind.JAXBContext;
@@ -22,6 +24,7 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
+import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
 
 public class SOAP {

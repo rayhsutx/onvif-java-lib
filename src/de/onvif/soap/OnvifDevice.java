@@ -1,5 +1,6 @@
 package de.onvif.soap;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
@@ -208,34 +209,49 @@ public class OnvifDevice {
 	public String getEncryptedPassword() {
 		return encryptPassword();
 	}
+	
+	String getRawPassword()
+	{
+		return password;
+	}
 
 	/**
 	 * Returns encrypted version of given password like algorithm like in WS-UsernameToken
 	 */
 	public String encryptPassword() {
+		if (password == null || "".equals(password))
+			return null;
+		
 		String nonce = getNonce();
 		String timestamp = getUTCTime();
 
-		String beforeEncryption = nonce + timestamp + password;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			baos.write(nonce.getBytes());
+			baos.write(timestamp.getBytes());
+			baos.write(password.getBytes());
+		} catch (IOException e) {
+			//should not happen
+		}
 
 		byte[] encryptedRaw;
 		try {
-			encryptedRaw = sha1(beforeEncryption);
+			encryptedRaw = sha1(baos.toByteArray());
 		}
 		catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return null;
 		}
-		String encoded = Base64.encodeBase64String(encryptedRaw);
+		String encoded = Base64.encodeBase64String(encryptedRaw).replace("\n", "").replace("\r", "");
 		return encoded;
 	}
 
-	private static byte[] sha1(String s) throws NoSuchAlgorithmException {
+	private static byte[] sha1(byte[] b) throws NoSuchAlgorithmException {
 		MessageDigest SHA1 = null;
 		SHA1 = MessageDigest.getInstance("SHA1");
 
 		SHA1.reset();
-		SHA1.update(s.getBytes());
+		SHA1.update(b);
 
 		byte[] encryptedRaw = SHA1.digest();
 		return encryptedRaw;
@@ -252,7 +268,7 @@ public class OnvifDevice {
 		if (nonce == null) {
 			createNonce();
 		}
-		return Base64.encodeBase64String(nonce.getBytes());
+		return Base64.encodeBase64String(nonce.getBytes()).replace("\n", "").replace("\r", "");
 	}
 
 	public void createNonce() {
@@ -265,7 +281,7 @@ public class OnvifDevice {
 	}
 
 	public String getUTCTime() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d'T'HH:mm:ss'Z'");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		sdf.setTimeZone(new SimpleTimeZone(SimpleTimeZone.UTC_TIME, "UTC"));
 
 		Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("UTC"));

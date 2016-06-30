@@ -2,7 +2,7 @@ package org.onvif.discovery;
 
 import java.net.URL;
 import java.util.*;
-import org.me.javawsdiscovery.DeviceDiscovery;
+//import org.me.javawsdiscovery.DeviceDiscovery;
 
 /**
  @author th
@@ -11,14 +11,14 @@ import org.me.javawsdiscovery.DeviceDiscovery;
 public class OnfivDiscovery {
  public static List<OnvifPointer> discoverOnvifDevices() {
     final ArrayList<OnvifPointer> onvifPointers = new ArrayList<>();
-    final Collection<URL> urls = DeviceDiscovery.discoverWsDevicesAsUrls("^http$", ".*onvif.*");
-    for (URL url : urls) {
-       try {
-          onvifPointers.add(new OnvifPointer(url));
-       } catch (Exception e) {
-          e.printStackTrace();
-       }
-    }
+//    final Collection<URL> urls = DeviceDiscovery.discoverWsDevicesAsUrls("^http$", ".*onvif.*");
+//    for (URL url : urls) {
+//       try {
+//          onvifPointers.add(new OnvifPointer(url));
+//       } catch (Exception e) {
+//          e.printStackTrace();
+//       }
+//    }
     return onvifPointers;
  }
 }
